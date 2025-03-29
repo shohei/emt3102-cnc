@@ -7,11 +7,10 @@ theta_s = 0;%rad
 
 out = sim('circle_MAfilt_post.slx');
 ts = out.ts.Data;
-Xo = out.Xo.Data;
-Yo = out.Yo.Data;
 Xi = out.Xi.Data;
 Yi = out.Yi.Data;
-
+Xo = out.Xo.Data;
+Yo = out.Yo.Data;
 Xii = out.Xii.Data;
 Yii = out.Yii.Data;
 

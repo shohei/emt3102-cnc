@@ -1,0 +1,28 @@
+clear; close all; clc;
+
+tau = 1;%s
+wc = 1;%rad/s
+Rc = 1;
+theta_s = 0;%rad
+
+out = sim('circle_MAfilt_post.slx');
+Xo = out.Xo.Data;
+Yo = out.Yo.Data;
+Xi = out.Xi.Data;
+Yi = out.Yi.Data;
+
+plot(Xi,Yi,'b');
+hold on;
+plot(Xo,Yo,'r');
+legend('ADCAI','ADCBI');
+axis equal;
+
+figure();
+
+
+big;
+
+
+
+
+

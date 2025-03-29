@@ -22,24 +22,26 @@ for idx=1:length(ts)
     axis equal;    
     plot(Xi(1:idx),Yi(1:idx),'g--');
     plot(Xo(1:idx),Yo(1:idx),'r');
-    plot(Xii(1:idx)-1,Yii(1:idx),'b');        
+    plot(Xii(1:idx),Yii(1:idx),'b');        
     big;
     drawnow;
 end
-legend('指令円軌跡','補間後加減速','補間前加減速');
+legend('Circular interpolation', ...
+    'ADCAI', ...
+    'ADCBI');
 
 figure();
-plot(ts,Xii-1,'b');
-hold on ;
 plot(ts,Xo,'r');
+hold on ;
+plot(ts,Xii,'b');
 title('X axis');
-legend('補間前','補間後');
+legend('ADCAI','ADCBI');
+big;
 
 figure();
-plot(ts, Yii,'b');
-hold on;
 plot(ts, Yo, 'r');
+hold on;
+plot(ts, Yii,'b');
 title('Y axis');
-legend('補間前','補間後');
-
+legend('ADCAI','ADCBI');
 big;

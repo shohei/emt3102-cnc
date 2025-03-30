@@ -1,6 +1,9 @@
 clear; close all; clc;
-
+load_params;
 slk = 'c_pvcm_2dof_ax1';
+
+FBtype = 1;%1: Semi-close, -1: Full-close
+
 
 Dr = 0;
 KT = 1;
@@ -61,5 +64,4 @@ ylabel('Response [-]');
 xlabel('t s');
 legend(lgtext{:});
 axis([0 tlast 0 1.5]);
-
 

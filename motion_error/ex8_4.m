@@ -1,9 +1,19 @@
 clear; close all; clc;
-load_params;
+% load_params;
+
 slk = 'c_pvcm_2dof_ax1';
 
 FBtype = 1;%1: Semi-close, -1: Full-close
 
+Ct = 1.0e4;%N•s/m
+Db = 0.05; %N•m•s/rad
+Dm = 0; %N•m•s/rad
+
+Jr = 2.22e-3; %kg•m^2
+Ja = 2.72e-2; %kg•m^2
+Kt = 1.1e8;%N/m
+Mt = 500;%kg
+R = 3.2e-3; %m/rad
 
 Dr = 0;
 KT = 1;
@@ -36,7 +46,7 @@ lspec={':k','-b'};
 mkspec = {'*','+'};
 for ii=1:length(Kby)
     eval(Kby{ii});
-    lgtext{ii} = {'Pole position',mkspec{ii},'(',Kby{ii},')'};
+    lgtext{ii} = ['Pole position',mkspec{ii},'(',Kby{ii},')'];
     [A,B,C,D] = linmod(slk);
     sysT = ss(A,B,C,D);
     [p1 z1] = pzmap(sysT(1,1));
@@ -65,3 +75,4 @@ xlabel('t s');
 legend(lgtext{:});
 axis([0 tlast 0 1.5]);
 
+big;

@@ -3,7 +3,8 @@ clear; close all; clc;
 
 slk = 'c_pvcm_2dof_ax1';
 
-FBtype = 1;%1: Semi-close, -1: Full-close
+% FBtype = 1;%1: Semi-close, -1: Full-close
+FBtype = -1;%1: Semi-close, -1: Full-close
 
 Ct = 1.0e4;%N•s/m
 Db = 0.05; %N•m•s/rad
@@ -15,11 +16,11 @@ Kt = 1.1e8;%N/m
 Mt = 500;%kg
 R = 3.2e-3; %m/rad
 
-Dr = 0;
-KT = 1;
+Dr = 0;%回転の粘性摩擦係数
+KT = 1;%トルク定数
 Wvc = 400;
 Kvi = Wvc/5;
-Kpp = Wvc/100;
+Kpp = Wvc/10;
 Kvp = Ja*Wvc/KT;
 
 vfb_on = 1;
@@ -33,7 +34,7 @@ rlocus(sys1);
 zeta = [0 0.3 0.7 1.0];
 wvec = 100:100:600;
 sgrid(zeta, wvec);
-axis([-30 50 -650 650]);
+axis([-300 50 -650 650]);
 ax1 = gca;
 hold on;
 

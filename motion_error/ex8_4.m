@@ -3,8 +3,8 @@ clear; close all; clc;
 
 slk = 'c_pvcm_2dof_ax1';
 
-% FBtype = 1;%1: Semi-close, -1: Full-close
-FBtype = -1;%1: Semi-close, -1: Full-close
+% FBtype = 1;% 1: Semi-close
+FBtype = -1; %-1: Full-close
 
 Ct = 1.0e4;%N•s/m
 Db = 0.05; %N•m•s/rad
@@ -23,6 +23,7 @@ Kvi = Wvc/5;
 Kpp = Wvc/10;
 Kvp = Ja*Wvc/KT;
 
+%Root locus
 vfb_on = 1;
 pfb_on = 0;
 [A B C D] = linmod(slk);
@@ -38,6 +39,8 @@ axis([-300 50 -650 650]);
 ax1 = gca;
 hold on;
 
+% Vary the P gain for position control
+% Compute step response
 vfb_on = 1;
 pfb_on = 1;
 Kby = {'Kpp=Wvc/10','Kpp=Wvc/4'};

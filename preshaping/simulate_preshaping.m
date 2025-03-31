@@ -1,8 +1,5 @@
 clear; close all; clc;
 
-tau = 0.1;%sec
-tau1 = 0.063;%sec
-
 wn = 100;%rad/s
 zeta = 0.05;
 
@@ -15,7 +12,7 @@ target_velocity = 1;%m/s
 original_accel_time = 0.1;%sec
 original_step_value = target_velocity / original_accel_time;
 
-shortened_step_time = 0.0628;%sec
+shortened_step_time = original_accel_time - deltaT;%sec
 shortened_step_value = target_velocity / shortened_step_time;
 
 initial_delay = 0.1;%sec

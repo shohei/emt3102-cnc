@@ -7,9 +7,8 @@ n = 4;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Signal generation for X-axis
-tlast = 2;
-% tlast = 0.6;
-dt = 0.01;
+tlast = 0.6;
+dt = 1e-4;
 ts = 0:dt:tlast;
 
 step_start = 0.01;
@@ -22,6 +21,7 @@ slk1 = 'linear_acceleration';
 [A B C D] = linmod(slk1);
 sys1 = ss(A,B,C,D);
 [Vrx, t] = lsim(sys1,signal_in,ts);
+figure(1);
 plot(ts, signal_in);
 hold on;
 plot(t, Vrx);
@@ -34,7 +34,7 @@ title('Velocity command');
 
 Mt = 100;%kg
 Kt = 1.0e8;%N/m
-Ct = 2.0e8;%N•s/m
+Ct = 20000;%N•s/m
 Jr = 3.0e-2;%kg•m^2
 Dr = 0;%N•m/srad
 lp = 1e-2;%m
@@ -50,7 +50,7 @@ Kvf = 0.7;%[-] velocity feedback gain
 
 vfb_on = 1;%velocity feedback ON
 pfb_on = 1;%position feedback ON
-FBtype = -1;%semi-closed positon feedback
+FBtype = 1;%semi-closed positon feedback
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % X-axis servo simulation
@@ -61,55 +61,57 @@ sysT = ss(A,B,C,D);
 xr = Xout(:,1);
 xm = Xout(:,2);
 xt = Xout(:,3);
-Kt_out = Xout(:,4);
 emx = xm-xr;%motor error
 etx = xt-xr;%table error
-figure();
-plot(t,xr);
-hold on;
-plot(t,xt);
-legend('xr','xt');
-
-figure();
-plot(t,Kt_out);
-title('KT');
 
 % Signal input for Y-axis
 Vry = Vrx;
-% Y-axis servo simulation
-Kvp = Kvp*1.05;
-Kvi = Kvi*1.05;
-Mt = Mt*2;
-Ct = Ct*1.05;
-[A B C D] = linmod(slk);
-sysT2 = ss(A,B,C,D);
-[Yout, t] = lsim(sysT2, Vry, t);
-yr = Yout(:,1);
-ym = Yout(:,2);
-yt = Yout(:,3);
-emy = ym-yr;%motor error
-ety = yt-yr;%table error
 
-% Motion error calculation
-th = deg2rad(45);
-en = -etx*sin(th)+ety*cos(th);
+parachange={'Kvp=1.05*Kvp;'
+    'Kvi=1.05*Kvi;'
+    'Mt=2*Mt;'
+    'Ct=1.05*Ct;'};%パラメータを変更するためのセル
+parareset={'Kvp=Kvp/1.05;'
+    'Kvi=Kvi/1.05;'
+    'Mt=Mt/2;'
+    'Ct=Ct/1.05;'};%パラメータを元にもどすためのセル
 
-figure();
-plot(t,etx);
-hold on;
-plot(t,ety);
-legend('etx','ety');
 
-figure();
-plot(t, en);
-legend('Table error et');
+for ii=1:4
+    % Y-axis servo simulation
+    eval(parachange{ii});
+    [A B C D]=linmod(slk);
+    eval(parareset{ii});
+    sysT2 = ss(A,B,C,D);
+    [Yout, t] = lsim(sysT2, Vry, t);
+    yr = Yout(:,1);
+    ym = Yout(:,2);
+    yt = Yout(:,3);
+    emy = ym-yr;%motor error
+    ety = yt-yr;%table error
 
-figure();
-plot(xr,yr);
-hold on;
-scale = 1;
-plot(xr+scale*etx,yr+scale*ety);
-legend('Interpolation','Table position');
+    % Motion error calculation
+    th = deg2rad(45);
+    et = etx*cos(th) + ety*sin(th);
+    en = -etx*sin(th)+ety*cos(th);
+
+    figure(2);
+    subplot(4,1,ii);
+    plot(t, en);
+    title(parachange{ii});    
+    sgtitle('Table error e_t');
+
+    figure(3);
+    subplot(2,2,ii);
+    plot(xr,yr);
+    hold on;
+    scale = 5000;
+    plot(xr+et*cos(th)-scale*en*sin(th),...
+        yr+et*sin(th)+scale*en*cos(th));
+    legend('Interpolation','Table position','Location','northwest');
+    title(parachange{ii});
+    sgtitle('Motion error for linear interpolation');
+end
 
 
 big;

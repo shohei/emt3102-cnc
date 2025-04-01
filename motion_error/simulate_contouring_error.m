@@ -54,7 +54,7 @@ FBtype = 1;%semi-closed positon feedback
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % X-axis servo simulation
-slk = 'c_ff_pvcm_2dof_ax1_2';
+slk = 'one_axis_servo_2dof';
 [A B C D] = linmod(slk);
 sysT = ss(A,B,C,D);
 [Xout, t] = lsim(sysT, Vrx, t);
@@ -108,9 +108,9 @@ for ii=1:4
     scale = 5000;
     plot(xr+et*cos(th)-scale*en*sin(th),...
         yr+et*sin(th)+scale*en*cos(th));
-    legend('Interpolation','Table position','Location','northwest');
+    legend('Reference','Actual','Location','northwest');
     title(parachange{ii});
-    sgtitle('Motion error for linear interpolation');
+    sgtitle('Contouring error');
 end
 
 
